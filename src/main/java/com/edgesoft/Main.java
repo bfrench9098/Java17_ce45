@@ -42,21 +42,17 @@ public class Main {
             System.out.println("--> No play lists found.\n");
         }
 
-        printActions();
+        printActions(true);
 
         boolean show = true;
 
         while (show) {
             switch (scanner.nextLine().toLowerCase().trim()) {
-                case "a" -> createPlayList();
-                case "add" -> createPlayList();
-                case "u" -> updatePlayList();
-                case "update" -> updatePlayList();
-                case "d" -> deletePlayList();
-                case "delete" -> deletePlayList();
-                case "b" -> show = false;
-                case "back" -> show = false;
-                default -> printActions();
+                case "a", "add" -> createPlayList();
+                case "u", "update" -> updatePlayList();
+                case "d", "delete" -> deletePlayList();
+                case "b", "back" -> show = false;
+                default -> printActions(true);
             }
         }
 
@@ -79,38 +75,96 @@ public class Main {
         System.out.println("\n--> Albums:");
 
         if (albums.size() > 0) {
-            for (int i = 0; i < albums.size(); i++) {
-                System.out.println((i + 1) + ". " + albums.get(i).getName()  + ", " + albums.get(i).getArtist());
-            }
+            listAlbums(false);
         } else {
             System.out.println("--> No albums found.\n");
         }
 
-        printActions();
+        printActions(true);
 
         boolean show = true;
 
         while (show) {
-            switch (scanner.nextLine().toLowerCase().trim()) {
-                case "a" -> createAlbum();
-                case "add" -> createAlbum();
-                case "u" -> updateAlbum();
-                case "update" -> updateAlbum();
-                case "d" -> deleteAlbum();
-                case "delete" -> deleteAlbum();
-                case "b" -> show = false;
-                case "back" -> show = false;
-                default -> printActions();
+            String myInput = scanner.nextLine().toLowerCase().trim();
+
+            switch (myInput) {
+                case "a", "add" -> createAlbum();
+                case "u", "update" -> updateAlbum();
+                case "d", "delete" -> deleteAlbum();
+                case "l", "list" -> listAlbums(true);
+                case "b", "back" -> show = false;
+                default -> handleAlbumInput(myInput.trim());
             }
         }
 
         printMainMenu();
     }
 
-    private static boolean deleteAlbum() {
-        boolean actionComplete = false;
+    private static void listAlbums(boolean doPrint) {
+        for (int i = 0; i < albums.size(); i++) {
+            System.out.println((i + 1) + ". " + albums.get(i).getName()  + ", " + albums.get(i).getArtist());
+        }
+
+        if (doPrint) {
+            printActions(true);
+        }
+    }
+
+    private static void handleAlbumInput(String albumIndex) {
+        boolean show = false;
+
+        try {
+            Album selectedAlbum = albums.get(Integer.parseInt(albumIndex) - 1);
+            System.out.println("\n--> Selected Album: " + selectedAlbum.getName() + ", " + selectedAlbum.getArtist());
+
+            selectedAlbum.printSongs();
+
+            printActions(false);
+            show = true;
+        } catch (NumberFormatException e) {
+            System.out.println("--> Invalid input. Please select a valid album number.");
+            printActions(true);
+            return;
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("--> Invalid input. Please select a valid album number.");
+            printActions(true);
+            return;
+        }
+
+        while (show) {
+            String myInput = scanner.nextLine().toLowerCase().trim();
+
+            switch (myInput) {
+                case "a", "add" -> addTrack();
+                case "u", "update" -> updateTrack();
+                case "d", "delete" -> deleteTrack();
+                case "l", "list" -> listTracks();
+                case "b", "back" -> show = false;
+                default -> printActions(false);
+            }
+        }
+
+        listEditAlbums();
+    }
+
+    private static void listTracks() {
         //TODO: create
-        return actionComplete;
+    }
+
+    private static void deleteTrack() {
+        //TODO: create
+    }
+
+    private static void updateTrack() {
+        //TODO: create
+    }
+
+    private static void addTrack() {
+        //TODO: create
+    }
+
+    private static void deleteAlbum() {
+        //TODO: create
     }
 
     private static void updateAlbum() {
@@ -135,10 +189,16 @@ public class Main {
         listEditAlbums();
     }
 
-    private static void printActions() {
-        String textBlock = """
-                \nActions: (A)dd, (U)pdate, (D)elete, (B)ack: """;
-        System.out.print(textBlock + " ");
+    private static void printActions(boolean includeTrackNo) {
+        if (includeTrackNo) {
+            String textBlock = """
+                    \nActions: (A)dd, (U)pdate, (D)elete, (B)ack, (L)ist, #: """;
+            System.out.print(textBlock + " ");
+        } else {
+            String textBlock = """
+                    \nActions: (A)dd, (U)pdate, (D)elete, (B)ack, (L)ist: """;
+            System.out.print(textBlock + " ");
+        }
     }
 
     private static void printMainMenu() {

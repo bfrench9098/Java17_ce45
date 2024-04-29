@@ -58,8 +58,12 @@ public class Album {
     }
 
     public void printSongs() {
-        for (Song song : songs) {
-            System.out.println(song);
+        if (songs.size() > 0) {
+            for (Song song : songs) {
+                System.out.println(song);
+            }
+        } else {
+            System.out.println("--> There are no songs in the album");
         }
     }
 }
