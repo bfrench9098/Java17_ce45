@@ -99,11 +99,54 @@ public class Main {
     }
 
     private static void deleteAlbum() {
-        //TODO: create
+        System.out.print("\nEnter album name to delete: ");
+        String albumName = scanner.nextLine();
+
+        int index = -1;
+        for (int i = 0; i < albums.size(); i++) {
+            if (albums.get(i).getName().equals(albumName)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            System.out.println("\n--> Album not found: " + albumName);
+        } else {
+            Album selectedAlbum = albums.remove(index);
+        }
+
+        listAlbums();
     }
 
     private static void updateAlbum() {
-        //TODO: create
+        System.out.print("\nEnter album name to update: ");
+        String albumName = scanner.nextLine();
+
+        int index = -1;
+        for (int i = 0; i < albums.size(); i++) {
+            if (albums.get(i).getName().equals(albumName)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            System.out.println("\n--> Album not found: " + albumName);
+        } else {
+            Album selectedAlbum = albums.get(index);
+
+            System.out.print("\nEnter new album name: ");
+            String newAlbumName = scanner.nextLine();
+
+            System.out.print("Enter new album artist: ");
+            String newAlbumArtist = scanner.nextLine();
+
+            selectedAlbum.setName(newAlbumName);
+            selectedAlbum.setArtist(newAlbumArtist);
+        }
+
+        listAlbums();
     }
 
     private static void createAlbum() {

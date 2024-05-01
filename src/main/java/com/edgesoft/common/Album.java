@@ -20,12 +20,30 @@ public class Album {
     }
 
     /**
+     * Sets the name of the album.
+     *
+     * @param name The name of the album.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * Retrieves the artist of the album.
      *
      * @return The artist of the album.
      */
     public String getArtist() {
         return artist;
+    }
+
+    /**
+     * Sets the artist of the album.
+     *
+     * @param artist The artist of the album.
+     */
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     /**
