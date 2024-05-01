@@ -10,6 +10,10 @@ public class PlayList {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public PlayList(String name) {
         this.name = name;
         this.songs = new LinkedList<>();

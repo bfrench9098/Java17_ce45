@@ -8,10 +8,10 @@ import com.edgesoft.common.PlayList;
 import com.edgesoft.common.Song;
 
 public class Main {
-    private static LinkedList<Album> albums = new LinkedList<Album>();
-    private static LinkedList<PlayList> playlists = new LinkedList<PlayList>();
+    private static final LinkedList<Album> albums = new LinkedList<Album>();
+    private static final LinkedList<PlayList> playlists = new LinkedList<PlayList>();
 
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         boolean show = true;
@@ -30,25 +30,18 @@ public class Main {
     }
 
     private static void listEditPlayLists() {
-        System.out.println("\n--> Play Lists:");
-
-        if (playlists.size() > 0) {
-            for (int i = 0; i < playlists.size(); i++) {
-                System.out.println((i + 1) + ". " + playlists.get(i).getName());
-            }
-        } else {
-            System.out.println("--> No play lists found.\n");
-        }
-
-        printActions(true);
+        listPlaylists();
 
         boolean show = true;
 
         while (show) {
+            printActions(true);
+
             switch (scanner.nextLine().toLowerCase().trim()) {
                 case "a", "add" -> createPlayList();
                 case "u", "update" -> updatePlayList();
                 case "d", "delete" -> deletePlayList();
+                case "l", "list" -> listPlaylists();
                 case "b", "back" -> show = false;
                 default -> printActions(true);
             }
@@ -57,26 +50,82 @@ public class Main {
         printMainMenu();
     }
 
+    private static void listPlaylists() {
+        System.out.println("\n--> Playlist Menu:");
+
+        if (playlists.size() > 0) {
+            for (int i = 0; i < playlists.size(); i++) {
+                System.out.println((i + 1) + ". " + playlists.get(i).getName() + "\n");
+            }
+        } else {
+            System.out.println("--> No playlists found.\n");
+        }
+    }
+
     private static void deletePlayList() {
-        //TODO: create
+        System.out.print("\nEnter playlist name to delete: ");
+        String playlistName = scanner.nextLine();
+
+        int index = -1;
+        for (int i = 0; i < albums.size(); i++) {
+            if (playlists.get(i).getName().equals(playlistName)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            System.out.println("\n--> Playlist not found: " + playlistName);
+        } else {
+            playlists.remove(index);
+        }
+
+        listPlaylists();
     }
 
     private static void updatePlayList() {
-        //TODO: create
+        System.out.print("\nEnter playlist name to update: ");
+        String playlistName = scanner.nextLine();
+
+        int index = -1;
+        for (int i = 0; i < playlists.size(); i++) {
+            if (playlists.get(i).getName().equals(playlistName)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            System.out.println("\n--> Playlist not found: " + playlistName);
+        } else {
+            PlayList selectedPlaylist = playlists.get(index);
+
+            System.out.print("\nEnter new playlist name: ");
+            String newAlbumName = scanner.nextLine();
+
+            selectedPlaylist.setName(newAlbumName);
+        }
+
+        listPlaylists();
     }
 
     private static void createPlayList() {
-        //TODO: create
+        System.out.print("\nEnter playlist name: ");
+        String playlistName = scanner.nextLine();
+
+        if (playlists.contains(playlistName)) {
+            System.out.println("--> Playlist already exists: " + playlistName);
+        } else {
+            PlayList playlist = new PlayList(playlistName);
+            playlists.add(playlist);
+            System.out.println("\n--> Playlist created: " + playlistName);
+        }
+
+        listPlaylists();
     }
 
     private static void listEditAlbums() {
-        System.out.println("\n--> Album Menu:");
-
-        if (albums.size() > 0) {
-            listAlbums();
-        } else {
-            System.out.println("--> No albums found.\n");
-        }
+        listAlbums();
 
         boolean show = true;
 
@@ -113,7 +162,7 @@ public class Main {
         if (index == -1) {
             System.out.println("\n--> Album not found: " + albumName);
         } else {
-            Album selectedAlbum = albums.remove(index);
+            albums.remove(index);
         }
 
         listAlbums();
@@ -168,14 +217,13 @@ public class Main {
     }
 
     private static void listAlbums() {
-        if (albums.size() > 0) {
-            System.out.println("\n--> Album Menu:");
+        System.out.println("\n--> Album Menu:");
 
+        if (albums.size() > 0) {
             for (int i = 0; i < albums.size(); i++) {
                 System.out.println((i + 1) + ". " + albums.get(i).getName() + ", " + albums.get(i).getArtist() + "\n");
             }
         } else {
-            System.out.println("\n--> Album Menu:");
             System.out.println("--> No albums found.\n");
         }
     }
@@ -192,12 +240,12 @@ public class Main {
 
             show = true;
         } catch (NumberFormatException e) {
-            System.out.println("--> Invalid input. Please select a valid album number.");
-            printActions(true);
+            System.out.println("--> Invalid input. Please select a valid album number.\n");
+            //printActions(true);
             return;
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("--> Invalid input. Please select a valid album number.");
-            printActions(true);
+            System.out.println("--> Invalid input. Please select a valid album number.\n");
+            //printActions(true);
             return;
         }
 
@@ -260,6 +308,7 @@ public class Main {
     }
 
     private static void addSong(Album selectedAlbum) {
+        //TODO: fix songmenu issue - also album menu invalid option issue
         System.out.print("\nEnter song title: ");
         String songTitle = scanner.nextLine();
 
