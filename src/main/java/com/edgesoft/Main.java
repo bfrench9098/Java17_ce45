@@ -262,7 +262,7 @@ public class Main {
                 case "d", "delete" -> deleteSong(selectedAlbum);
                 case "l", "list" -> printSongs(selectedAlbum);
                 case "b", "back" -> show = false;
-                default -> printActions(false);
+                default -> System.out.println("-->Invalid Option Selected\n");
             }
         }
 
